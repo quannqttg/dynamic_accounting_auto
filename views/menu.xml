@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Root (under Accounting app) -->
+  <menuitem id="menu_dynamic_accounting_root"
+            name="Dynamic Accounting (CE)"
+            parent="account.menu_finance_configuration"
+            sequence="900"/>
+
+  <!-- Menu that opens the wizard action defined above -->
+  <menuitem id="menu_dynamic_accounting_config"
+            name="Configuration Wizard"
+            parent="menu_dynamic_accounting_root"
+            action="dynamic_accounting_auto.action_dynamic_accounting_config_wizard"
+            sequence="10"/>
+</odoo>

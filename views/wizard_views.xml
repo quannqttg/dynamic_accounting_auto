@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Action (must exist before menu references it) -->
+  <record id="action_dynamic_accounting_config_wizard" model="ir.actions.act_window">
+    <field name="name">Dynamic Accounting (CE) - Configuration</field>
+    <field name="res_model">dynamic.accounting.config.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{}</field>
+  </record>
+
+  <!-- Wizard form -->
+  <record id="view_dynamic_accounting_config_wizard_form" model="ir.ui.view">
+    <field name="name">dynamic.accounting.config.wizard.form</field>
+    <field name="model">dynamic.accounting.config.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Dynamic Accounting (CE) Configuration">
+        <group>
+          <field name="create_1568_1569"/>
+          <field name="ensure_stk"/>
+          <field name="apply_fifo"/>
+          <field name="set_expense_6320"/>
+        </group>
+        <footer>
+          <button string="Apply" type="object" name="action_apply" class="btn-primary"/>
+          <button string="Cancel" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+</odoo>
