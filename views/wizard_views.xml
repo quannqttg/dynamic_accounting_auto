@@ -1,31 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <!-- Action (must exist before menu references it) -->
-  <record id="action_dynamic_accounting_config_wizard" model="ir.actions.act_window">
-    <field name="name">Dynamic Accounting (CE) - Configuration</field>
-    <field name="res_model">dynamic.accounting.config.wizard</field>
-    <field name="view_mode">form</field>
-    <field name="target">new</field>
-    <field name="context">{}</field>
-  </record>
+    <record id="view_dynamic_accounting_config_wizard_form" model="ir.ui.view">
+        <field name="name">dynamic.accounting.config.wizard.form</field>
+        <field name="model">dynamic.accounting.config.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cấu hình Kế toán Tự động">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><span>Cấu hình Kế toán Tự động</span></h1>
+                        <p class="oe_grey">
+                            Wizard này sẽ tự động thiết lập:
+                            <ul>
+                                <li>Tạo tài khoản 1568/1569 nếu thiếu</li>
+                                <li>Tạo sổ nhật ký STK (Định giá tồn kho)</li>
+                                <li>Áp dụng FIFO + Real-time cho danh mục sản phẩm</li>
+                                <li>Thiết lập tài khoản chi phí 6320 cho danh mục</li>
+                                <li>Đặt AR/AP mặc định (1311/3311) cho đối tác</li>
+                            </ul>
+                        </p>
+                    </div>
 
-  <!-- Wizard form -->
-  <record id="view_dynamic_accounting_config_wizard_form" model="ir.ui.view">
-    <field name="name">dynamic.accounting.config.wizard.form</field>
-    <field name="model">dynamic.accounting.config.wizard</field>
-    <field name="arch" type="xml">
-      <form string="Dynamic Accounting (CE) Configuration">
-        <group>
-          <field name="create_1568_1569"/>
-          <field name="ensure_stk"/>
-          <field name="apply_fifo"/>
-          <field name="set_expense_6320"/>
-        </group>
-        <footer>
-          <button string="Apply" type="object" name="action_apply" class="btn-primary"/>
-          <button string="Cancel" class="btn-secondary" special="cancel"/>
-        </footer>
-      </form>
-    </field>
-  </record>
+                    <!-- Kết quả (hiện sau khi thực thi) -->
+                    <group name="result_group" invisible="not result_message">
+                        <field name="result_message" nolabel="1" colspan="2"/>
+                    </group>
+
+                    <!-- Form cấu hình (ẩn sau khi có kết quả) -->
+                    <group name="config_group" invisible="result_message">
+                        <group string="Tài khoản định giá tồn kho">
+                            <field name="valuation_code" placeholder="1561"/>
+                            <field name="input_code" placeholder="1568"/>
+                            <field name="output_code" placeholder="1569"/>
+                        </group>
+                        
+                        <group string="Sổ nhật ký">
+                            <field name="journal_code" placeholder="STK"/>
+                            <field name="journal_name" placeholder="Định giá tồn kho"/>
+                        </group>
+                    </group>
+
+                    <group name="expense_group" invisible="result_message">
+                        <group string="Tài khoản chi phí (COGS)">
+                            <field name="expense_code" placeholder="6320"/>
+                            <field name="set_expense_account"/>
+                        </group>
+                        
+                        <group string="Áp dụng">
+                            <field name="apply_to_categories"/>
+                        </group>
+                    </group>
+
+                    <group name="partner_group" invisible="result_message">
+                        <group string="AR/AP mặc định cho đối tác">
+                            <field name="ar_code" placeholder="1311"/>
+                            <field name="ap_code" placeholder="3311"/>
+                            <field name="set_partner_defaults"/>
+                            <field name="update_existing_partners" 
+                                   invisible="not set_partner_defaults"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning" role="alert" 
+                         invisible="result_message">
+                        <strong>⚠ Lưu ý quan trọng:</strong>
+                        <ul>
+                            <li><strong>Tài khoản 1561</strong> (Định giá tồn kho) phải được tạo thủ công trước</li>
+                            <li><strong>Tài khoản AR/AP</strong> (1311/3311) phải tồn tại trong hệ thống tài khoản</li>
+                            <li>Wizard sử dụng quyền <code>sudo()</code> để thực thi</li>
+                            <li>Các thay đổi sẽ được commit vào database ngay lập tức</li>
+                            <li>Chế độ "Cập nhật tất cả đối tác" sẽ ghi đè AR/AP hiện có</li>
+                        </ul>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button string="Thực thi cấu hình" 
+                            name="action_apply_config" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="result_message"
+                            confirm="Bạn có chắc muốn thực thi cấu hình? Thao tác này sẽ thay đổi dữ liệu trong database."/>
+                    <button string="Đóng" 
+                            special="cancel" 
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dynamic_accounting_config_wizard" model="ir.actions.act_window">
+        <field name="name">Cấu hình Kế toán Tự động</field>
+        <field name="res_model">dynamic.accounting.config.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_company"/>
+    </record>
 </odoo>
