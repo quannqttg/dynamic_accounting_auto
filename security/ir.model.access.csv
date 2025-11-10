@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dynamic_accounting_config_wizard,dynamic_accounting_config_wizard,model_dynamic_accounting_config_wizard,base.group_system,1,1,1,1
+access_dynamic_accounting_config_wizard_user,Access Dynamic Accounting Wizard (User),model_dynamic_accounting_config_wizard,base.group_user,1,1,1,1
+access_dynamic_accounting_config_wizard_accountant,Access Dynamic Accounting Wizard (Accountant),model_dynamic_accounting_config_wizard,account.group_account_user,1,1,1,1
